@@ -5,9 +5,9 @@ export default function Home() {
       
       <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Latest Tournament</h2>
+          <h2 className="text-xl font-semibold mb-4">Tournaments</h2>
           <p className="text-gray-600">
-            Join us for our upcoming weekend tournament! Open to all rated players.
+            Join us for our upcoming tournaments and view past results.
           </p>
           <a
             href="/tournaments"
