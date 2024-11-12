@@ -1,7 +1,6 @@
 import Papa from 'papaparse';
 
 export async function fetchUpcomingTournaments() {
-  // Replace this URL with your Google Sheet CSV export URL
   const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-BVrlSzBGwS4UtFbndn_XG6KhvbkvO219caOb6RPD9MH1RUfkENq53NokjYc2aDReybTuEp-RliZ-/pub?gid=1154230581&single=true&output=csv";
 
   try {
@@ -25,7 +24,6 @@ export async function fetchUpcomingTournaments() {
       entryFee: tournament.entryFee,
       prizes: tournament.prizes,
       registration: tournament.registrationDeadline,
-      paypalButton: tournament.paypalButton,
       status: tournament.status
     }));
   } catch (error) {

@@ -2,21 +2,37 @@
 
 import { useState, useEffect } from 'react';
 import { fetchUpcomingTournaments } from '@/lib/sheets';
+import { PayPalButton } from '@/components/paypal/PayPalButton';
 
 export default function TournamentsPage() {
   const [activeTab, setActiveTab] = useState('upcoming');
   const [tournaments, setTournaments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [paypalLoaded, setPaypalLoaded] = useState(false);
   
-  // Replace with your actual Google Sheet URL for past tournaments
   const PAST_TOURNAMENTS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSfaRESkD-nL_H7o4dRYkLlhXGgHwc8Aebu3mDchULcMa-P0tRTl1PYOpDJr84Z5RWnhih0vtlmgeRI/pubhtml?widget=true&chrome=false";
+
+  useEffect(() => {
+    if (window.paypal) {
+      setPaypalLoaded(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&components=hosted-buttons&enable-funding=venmo&currency=USD`;
+
+    script.addEventListener('load', () => {
+      setPaypalLoaded(true);
+    });
+
+    document.body.appendChild(script);
+  }, []);
+
   useEffect(() => {
     async function loadTournaments() {
       try {
         const data = await fetchUpcomingTournaments();
-        console.log("fetched data")
-        console.log(data)
         setTournaments(data);
         setLoading(false);
       } catch (err) {
@@ -110,11 +126,8 @@ export default function TournamentsPage() {
                       <div>
                         <h3 className="font-semibold text-gray-900">Registration</h3>
                         <p className="text-gray-600">{tournament.registration}</p>
-                        {tournament.status === 'Open' && (
-                          <div 
-                            className="mt-4"
-                            dangerouslySetInnerHTML={{ __html: tournament.paypalButton }}
-                          />
+                        {tournament.status === 'Open' && paypalLoaded && (
+                          <PayPalButton tournamentId={tournament.id} />
                         )}
                         {tournament.status === 'Closed' && (
                           <p className="mt-4 text-red-600">Registration Closed</p>
