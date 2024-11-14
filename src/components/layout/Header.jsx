@@ -13,11 +13,11 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-white dark:bg-gray-800 shadow ">
       <nav className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <Link href="/" className="text-xl font-bold">
+            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
               NYC Chess
             </Link>
           </div>
@@ -32,8 +32,8 @@ const Header = () => {
                     href={link.href}
                     className={`px-3 py-2 rounded-md text-sm font-medium ${
                       isActive
-                        ? 'bg-gray-900 text-white'
-                        : 'text-gray-900 hover:bg-gray-100'
+                        ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900'
+                        : 'text-gray-900 hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-700'
                     }`}
                   >
                     {link.label}
