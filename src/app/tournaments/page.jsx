@@ -20,7 +20,7 @@ export default function TournamentsPage() {
     }
 
     const script = document.createElement('script');
-    script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&components=hosted-buttons&enable-funding=venmo&currency=USD`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&components=buttons&enable-funding=venmo&currency=USD`;
 
     script.addEventListener('load', () => {
       setPaypalLoaded(true);
@@ -127,7 +127,11 @@ export default function TournamentsPage() {
                         <h3 className="font-semibold text-gray-900">Registration</h3>
                         <p className="text-gray-600">{tournament.registration}</p>
                         {tournament.status === 'Open' && paypalLoaded && (
-                          <PayPalButton tournamentId={tournament.id} />
+                          <PayPalButton
+                            tournamentId={tournament.id}
+                            amount={tournament.entryFee}
+                            name={tournament.name}
+                          />
                         )}
                         {tournament.status === 'Closed' && (
                           <p className="mt-4 text-red-600">Registration Closed</p>
