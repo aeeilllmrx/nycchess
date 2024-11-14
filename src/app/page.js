@@ -5,7 +5,7 @@ export default function Home() {
       
       <div className="grid md:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Tournaments</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">Tournaments</h2>
           <p className="text-gray-600">
             Join us for our upcoming tournaments and view past results.
           </p>
@@ -18,7 +18,7 @@ export default function Home() {
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Player Rankings</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">Player Rankings</h2>
           <p className="text-gray-600">
             Check out the latest player ratings and rankings from recent tournaments.
           </p>
@@ -31,7 +31,7 @@ export default function Home() {
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">Upcoming Events</h2>
           <p className="text-gray-600">
             View our calendar for chess meetups, tournaments, and special events.
           </p>
@@ -44,7 +44,7 @@ export default function Home() {
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold mb-4">Join a Club</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">Join a Club</h2>
           <p className="text-gray-600">
             Find a chess club near you and become part of our growing community.
           </p>
