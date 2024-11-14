@@ -10,6 +10,7 @@ const Header = () => {
     { href: '/players', label: 'Players' },
     { href: '/calendar', label: 'Calendar' },
     { href: '/tournaments', label: 'Tournaments' },
+    { href: '/clubs', label: 'Clubs' },
   ];
 
   return (

@@ -49,7 +49,7 @@ export default function Home() {
             Find a chess club near you and become part of our growing community.
           </p>
           <a
-            href="#"
+            href="/clubs"
             className="mt-4 inline-block text-blue-600 hover:text-blue-800"
           >
             Find clubs →
