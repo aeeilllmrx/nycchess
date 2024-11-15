@@ -1,5 +1,6 @@
 "use client";
 
+import { orderBy } from 'lodash';
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
@@ -69,19 +70,23 @@ export default function PlayersPage() {
           <SelectTrigger className="w-48">
             <SelectValue placeholder="Filter by team" />
           </SelectTrigger>
-          <SelectContent className="bg-white dark:bg-gray-800">
-            <SelectItem value="all">All Teams</SelectItem>
+          <SelectContent className="bg-white dark:bg-gray-800 dark:text-white">
+            <SelectItem value="all" className="dark:text-white">All Teams</SelectItem>
             {teams.map(team => (
-              <SelectItem key={team} value={team}>{team}</SelectItem>
+              <SelectItem key={team} value={team} className="dark:text-white">{team}</SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
       <Tabs defaultValue="blitz" className="w-full">
-        <TabsList>
-          <TabsTrigger value="blitz">Blitz Ratings</TabsTrigger>
-          <TabsTrigger value="rapid">Rapid Ratings</TabsTrigger>
+        <TabsList className="bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+          <TabsTrigger value="blitz" className="px-4 py-2 rounded-md hover:bg-white hover:shadow-sm dark:hover:bg-gray-700">
+            Blitz Ratings
+          </TabsTrigger>
+          <TabsTrigger value="rapid" className="px-4 py-2 rounded-md hover:bg-white hover:shadow-sm dark:hover:bg-gray-700">
+            Rapid Ratings
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="blitz">
@@ -92,19 +97,15 @@ export default function PlayersPage() {
                 <TableHead>Name</TableHead>
                 <TableHead>Team</TableHead>
                 <TableHead className="text-right">Rating</TableHead>
-                <TableHead className="text-right">RD</TableHead>
-                <TableHead className="text-right">RV</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredPlayers.map((player) => (
+              {orderBy(filteredPlayers, [(player) => Number(player.BlitzRating || 0)], ['desc']).map((player) => (
                 <TableRow key={player.ID}>
                   <TableCell>{player.ID}</TableCell>
                   <TableCell>{player.Name}</TableCell>
                   <TableCell>{player.Team}</TableCell>
                   <TableCell className="text-right">{player.BlitzRating}</TableCell>
-                  <TableCell className="text-right">{player.BlitzRD}</TableCell>
-                  <TableCell className="text-right">{player.BlitzRV}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -119,19 +120,15 @@ export default function PlayersPage() {
                 <TableHead>Name</TableHead>
                 <TableHead>Team</TableHead>
                 <TableHead className="text-right">Rating</TableHead>
-                <TableHead className="text-right">RD</TableHead>
-                <TableHead className="text-right">RV</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredPlayers.map((player) => (
+              {orderBy(filteredPlayers, [(player) => Number(player.RapidRating || 0)], ['desc']).map((player) => (
                 <TableRow key={player.ID}>
                   <TableCell>{player.ID}</TableCell>
                   <TableCell>{player.Name}</TableCell>
                   <TableCell>{player.Team}</TableCell>
                   <TableCell className="text-right">{player.RapidRating}</TableCell>
-                  <TableCell className="text-right">{player.RapidRD}</TableCell>
-                  <TableCell className="text-right">{player.RapidRV}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -21,20 +21,17 @@ export default function CalendarPage() {
   
         <div className="mt-6 grid md:grid-cols-2 gap-6">
           <div className="bg-green-50 p-4 rounded-lg">
-            <h2 className="text-lg font-semibold text-green-800 mb-2">Regular Events</h2>
+            <h2 className="text-lg font-semibold text-green-800 mb-2">Popular Events</h2>
             <ul className="text-green-700 space-y-2">
-              <li>• Club Meetings: Every Tuesday 6-9pm</li>
-              <li>• Weekend Tournaments: First Saturday monthly</li>
-              <li>• Beginner Lessons: Wednesdays 5-6pm</li>
+              <li>• Nook Club: Every other Tuesday 7-10pm</li>
             </ul>
           </div>
   
           <div className="bg-blue-50 p-4 rounded-lg">
             <h2 className="text-lg font-semibold text-blue-800 mb-2">Event Information</h2>
             <ul className="text-blue-700 space-y-2">
-              <li>• Click any event for details and registration</li>
+              <li>• Click any event for details.</li>
               <li>• Tournament entry fees vary by event</li>
-              <li>• Pre-registration required for tournaments</li>
             </ul>
           </div>
         </div>
