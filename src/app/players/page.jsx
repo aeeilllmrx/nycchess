@@ -70,10 +70,10 @@ export default function PlayersPage() {
           <SelectTrigger className="w-48">
             <SelectValue placeholder="Filter by team" />
           </SelectTrigger>
-          <SelectContent className="bg-white dark:bg-gray-800 dark:text-white">
-            <SelectItem value="all" className="dark:text-white">All Teams</SelectItem>
+          <SelectContent className="bg-white text-gray-500">
+            <SelectItem value="all">All Teams</SelectItem>
             {teams.map(team => (
-              <SelectItem key={team} value={team} className="dark:text-white">{team}</SelectItem>
+              <SelectItem key={team} value={team}>{team}</SelectItem>
             ))}
           </SelectContent>
         </Select>

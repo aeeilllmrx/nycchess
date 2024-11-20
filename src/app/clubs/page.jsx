@@ -56,9 +56,9 @@ const ChessClubs = () => {
           <SelectTrigger className="w-48">
             <SelectValue placeholder="Select borough" />
           </SelectTrigger>
-          <SelectContent className="bg-white dark:bg-gray-800 dark:text-white">
+          <SelectContent className="bg-white text-gray-500">
             {boroughs.map(borough => (
-              <SelectItem key={borough} value={borough} className="dark:text-white">
+              <SelectItem key={borough} value={borough}>
                 {borough}
               </SelectItem>
             ))}
