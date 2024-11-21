@@ -1,5 +1,4 @@
 export default function CalendarPage() {
-    // Replace this URL with your actual Google Calendar embed URL
     const CALENDAR_URL = "https://calendar.google.com/calendar/embed?src=c49e1a168ff7f7638fc3fb7dc0abeb76318b4ed14272e1cb86d01c8cd9267cc9%40group.calendar.google.com&ctz=America%2FNew_York&showTitle=0&showNav=1&showPrint=0&showTabs=1&showCalendars=0&showTz=1";
     return (
       <div className="max-w-6xl mx-auto">

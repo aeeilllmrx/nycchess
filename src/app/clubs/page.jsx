@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Papa from 'papaparse';
 
-const ChessClubs = () => {
+export default function ClubsPage() {
   const [clubs, setClubs] = useState([]);
   const [selectedBorough, setSelectedBorough] = useState("All");
   const [loading, setLoading] = useState(true);
@@ -49,7 +49,7 @@ const ChessClubs = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">NYC Chess Clubs</h1>
+      <h1 className="text-3xl font-bold mb-6">NYC Chess Club</h1>
       
       <div className="mb-6">
         <Select value={selectedBorough} onValueChange={setSelectedBorough}>
@@ -88,5 +88,3 @@ const ChessClubs = () => {
     </div>
   );
 };
-
-export default ChessClubs;
