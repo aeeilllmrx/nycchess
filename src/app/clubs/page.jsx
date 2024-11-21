@@ -71,7 +71,7 @@ export default function ClubsPage() {
           <Card key={club.id}>
             <CardContent className="p-4">
               <h2 className="text-xl font-semibold mb-2">{club.name}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-600">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-600 dark:text-gray-300">
                 <div>
                   <p><span className="font-medium">Venue:</span> {club.venue}</p>
                   <p><span className="font-medium">Location:</span> {club.location}, {club.borough}</p>

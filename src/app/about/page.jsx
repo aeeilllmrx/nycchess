@@ -10,7 +10,7 @@ export default function AboutPage() {
       <div className="max-w-3xl space-y-8">
         <section>
           <h2 className="text-2xl font-semibold mb-4">Our Vision</h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
             NYC Chess Club emerged from a simple yet powerful idea: to unite New York City&apos;s
             vibrant but fragmented chess community. While our city has always been a chess
             powerhouse, with many clubs across the five boroughs, we saw the need for
@@ -20,7 +20,7 @@ export default function AboutPage() {
         
         <section>
           <h2 className="text-2xl font-semibold mb-4">Unified Rating System</h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
             One of our key innovations is the introduction of a unified rating system that
             carries across all participating clubs. This means players can maintain a single,
             reliable rating whether they&apos;re playing in Brooklyn, Queens, or Manhattan. It&apos;s
@@ -32,11 +32,11 @@ export default function AboutPage() {
         <section>
           <h2 className="text-2xl font-semibold mb-4">Inter-Club Events</h2>
           <div className="space-y-4">
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
               We organize various inter-club competitions that bring together players from
               across the city:
             </p>
-            <ul className="list-disc list-inside text-gray-600 space-y-2">
+            <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-2">
               <li>NYC Club Olympiad - Our flagship annual team competition</li>
               <li>Club vs Club Matches - Regular friendly competitions</li>
             </ul>
@@ -45,7 +45,7 @@ export default function AboutPage() {
         
         <section>
           <h2 className="text-2xl font-semibold mb-4">Community Building</h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
             Beyond competition, we&apos;re creating a social scene where chess players can connect,
             learn, and grow together. Our network hosts regular social events, simultaneous exhibitions, 
             and casual meetups. We believe chess is not just a game of moves, but a way to 
@@ -57,7 +57,7 @@ export default function AboutPage() {
         
         <section>
           <h2 className="text-2xl font-semibold mb-4">Join the Movement</h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
             Whether you&apos;re a club looking to join our network, a player seeking
             new challenges, or someone interested in learning chess, you&apos;re welcome
             to be part of our growing community. Together, we&apos;re making New York City&apos;s
