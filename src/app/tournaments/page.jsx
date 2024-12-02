@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { fetchUpcomingTournaments } from '@/lib/sheets';
 import { PayPalButton } from '@/components/paypal/PayPalButton';
+import { PastTournaments } from './pastTournaments';
 
 export default function TournamentsPage() {
   const [activeTab, setActiveTab] = useState('upcoming');
@@ -10,9 +11,8 @@ export default function TournamentsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [paypalLoaded, setPaypalLoaded] = useState(false);
+  const [clubsData, setClubsData] = useState([]);
   
-  const PAST_TOURNAMENTS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSfaRESkD-nL_H7o4dRYkLlhXGgHwc8Aebu3mDchULcMa-P0tRTl1PYOpDJr84Z5RWnhih0vtlmgeRI/pubhtml?widget=true&chrome=false";
-
   useEffect(() => {
     if (window.paypal) {
       setPaypalLoaded(true);
@@ -43,6 +43,24 @@ export default function TournamentsPage() {
 
     loadTournaments();
   }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/drive');
+        const data = await response.json();
+        setClubsData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (activeTab === 'past') {
+      fetchData();
+    }
+  }, [activeTab]);
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -153,15 +171,7 @@ export default function TournamentsPage() {
       )}
 
       {/* Past Results Section */}
-      {activeTab === 'past' && (
-        <div className="relative w-full overflow-hidden rounded-lg shadow" style={{ paddingTop: '75%' }}>
-          <iframe
-            src={PAST_TOURNAMENTS_URL}
-            className="absolute top-0 left-0 w-full h-full border-0"
-            title="Tournament Results"
-          />
-        </div>
-      )}
+      {activeTab === 'past' && <PastTournaments clubsData={clubsData} />}
     </div>
   );
 }

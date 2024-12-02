@@ -13,7 +13,7 @@ export default function ClubsPage() {
   useEffect(() => {
     const fetchClubs = async () => {
       try {
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-BVrlSzBGwS4UtFbndn_XG6KhvbkvO219caOb6RPD9MH1RUfkENq53NokjYc2aDReybTuEp-RliZ-/pub?gid=796731803&single=true&output=csv"
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSck3PaG0ib-qXuHNSY_IolL_jvLQT0yjtH2goI1Lb_LC4pnf5iOynA4lGm99P1EM76pzwqBstux6uH/pub?gid=789069483&single=true&output=csv"
         const response = await fetch(SHEET_URL);
         const csvText = await response.text();
         

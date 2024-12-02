@@ -16,7 +16,7 @@ export default function PlayersPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-BVrlSzBGwS4UtFbndn_XG6KhvbkvO219caOb6RPD9MH1RUfkENq53NokjYc2aDReybTuEp-RliZ-/pub?gid=0&single=true&output=tsv"
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTqKwdaM-ASrmretOYuZHcpmz26Fl0Dqn-cRdeXPOu7r6_aIoa4et_4-DitOWvRU53u862F4svs5z8N/pub?gid=1428429697&single=true&output=tsv"
         const response = await fetch(SHEET_URL);
         const text = await response.text();
         
@@ -139,7 +139,7 @@ export default function PlayersPage() {
       <div className="mt-6 bg-blue-50 p-4 rounded-lg">
         <h2 className="text-lg font-semibold text-blue-800 mb-2">About Rankings</h2>
         <ul className="text-blue-700 space-y-1 list-disc list-inside">
-          <li>Rankings are updated within 24 hours after each tournament</li>
+          <li>Rankings are updated after each tournament</li>
           <li>Ratings are calculated using the Glicko-2 formula</li>
         </ul>
       </div>

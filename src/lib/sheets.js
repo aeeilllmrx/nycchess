@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 
 export async function fetchUpcomingTournaments() {
-  const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-BVrlSzBGwS4UtFbndn_XG6KhvbkvO219caOb6RPD9MH1RUfkENq53NokjYc2aDReybTuEp-RliZ-/pub?gid=1154230581&single=true&output=csv";
+  const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSck3PaG0ib-qXuHNSY_IolL_jvLQT0yjtH2goI1Lb_LC4pnf5iOynA4lGm99P1EM76pzwqBstux6uH/pub?gid=966763818&single=true&output=csv";
 
   try {
     const response = await fetch(SHEET_URL);
