@@ -16,7 +16,7 @@ export default function PlayersPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTqKwdaM-ASrmretOYuZHcpmz26Fl0Dqn-cRdeXPOu7r6_aIoa4et_4-DitOWvRU53u862F4svs5z8N/pub?gid=1428429697&single=true&output=tsv"
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHfkpjzf6lxKgpKCUa-f7CfvjHTiko34qrLe2WKeOGn46CaxeLMWea8fVSyMYV3iNDV3RMjC2HyRlT/pub?gid=985029476&single=true&output=tsv"
         const response = await fetch(SHEET_URL);
         const text = await response.text();
         
