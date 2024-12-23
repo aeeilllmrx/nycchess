@@ -10,22 +10,30 @@ export async function fetchUpcomingTournaments() {
     const parsed = Papa.parse(csvData, {
       header: true,
       skipEmptyLines: true,
-      dynamicTyping: true, // Automatically convert numbers
+      dynamicTyping: true,
     });
 
-    return parsed.data.map(tournament => ({
-      id: tournament.id,
-      name: tournament.name,
-      date: tournament.date,
-      time: tournament.time,
-      location: tournament.location,
-      format: tournament.format,
-      timeControl: tournament.timeControl,
-      entryFee: tournament.entryFee,
-      prizes: tournament.prizes,
-      registration: tournament.registrationDeadline,
-      status: tournament.status
-    }));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return parsed.data
+      .filter(tournament => {
+        const tournamentDate = new Date(tournament.date);
+        return tournamentDate >= today;
+      })
+      .map(tournament => ({
+        id: tournament.id,
+        name: tournament.name,
+        date: tournament.date,
+        time: tournament.time,
+        location: tournament.location,
+        format: tournament.format,
+        timeControl: tournament.timeControl,
+        entryFee: tournament.entryFee,
+        prizes: tournament.prizes,
+        registration: tournament.registrationDeadline,
+        status: tournament.status
+      }));
   } catch (error) {
     console.error('Error fetching tournament data:', error);
     return [];
