@@ -16,7 +16,7 @@ export default function PlayersPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHfkpjzf6lxKgpKCUa-f7CfvjHTiko34qrLe2WKeOGn46CaxeLMWea8fVSyMYV3iNDV3RMjC2HyRlT/pub?gid=985029476&single=true&output=tsv"
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHfkpjzf6lxKgpKCUa-f7CfvjHTiko34qrLe2WKeOGn46CaxeLMWea8fVSyMYV3iNDV3RMjC2HyRlT/pub?gid=985029476&single=true&range=A:Z&output=tsv"
         const response = await fetch(SHEET_URL);
         const text = await response.text();
         
@@ -100,12 +100,12 @@ export default function PlayersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orderBy(filteredPlayers, [(player) => Number(player.BlitzRating || 0)], ['desc']).map((player) => (
+              {orderBy(filteredPlayers, [(player) => Number(player.Rating_2 || 0)], ['desc']).map((player) => (
                 <TableRow key={player.ID}>
                   <TableCell>{player.ID}</TableCell>
                   <TableCell>{player.Name}</TableCell>
                   <TableCell>{player.Team}</TableCell>
-                  <TableCell className="text-right">{player.BlitzRating}</TableCell>
+                  <TableCell className="text-right">{player.Rating_2}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -123,12 +123,12 @@ export default function PlayersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orderBy(filteredPlayers, [(player) => Number(player.RapidRating || 0)], ['desc']).map((player) => (
+              {orderBy(filteredPlayers, [(player) => Number(player.Rating || 0)], ['desc']).map((player) => (
                 <TableRow key={player.ID}>
                   <TableCell>{player.ID}</TableCell>
                   <TableCell>{player.Name}</TableCell>
                   <TableCell>{player.Team}</TableCell>
-                  <TableCell className="text-right">{player.RapidRating}</TableCell>
+                  <TableCell className="text-right">{player.Rating}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
