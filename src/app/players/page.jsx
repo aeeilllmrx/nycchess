@@ -102,7 +102,7 @@ export default function PlayersPage() {
             <TableBody>
               {orderBy(filteredPlayers, [(player) => Number(player.Rating_2 || 0)], ['desc']).map((player) => (
                 <TableRow key={player.ID}>
-                  <TableCell>{player.ID}</TableCell>
+                  <TableCell>{player.ID.slice(1)}</TableCell>
                   <TableCell>{player.Name}</TableCell>
                   <TableCell>{player.Team}</TableCell>
                   <TableCell className="text-right">{player.Rating_2}</TableCell>
@@ -125,7 +125,7 @@ export default function PlayersPage() {
             <TableBody>
               {orderBy(filteredPlayers, [(player) => Number(player.Rating || 0)], ['desc']).map((player) => (
                 <TableRow key={player.ID}>
-                  <TableCell>{player.ID}</TableCell>
+                  <TableCell>{player.ID.slice(1)}</TableCell>
                   <TableCell>{player.Name}</TableCell>
                   <TableCell>{player.Team}</TableCell>
                   <TableCell className="text-right">{player.Rating}</TableCell>
