@@ -12,6 +12,7 @@ export default function PlayersPage() {
   const [selectedTeam, setSelectedTeam] = useState('all');
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +41,8 @@ export default function PlayersPage() {
   }, []);
 
   const filteredPlayers = players.filter(player => 
-    selectedTeam === 'all' || player.Team === selectedTeam
+    (selectedTeam === 'all' || player.Team === selectedTeam) &&
+    player.Name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (loading) {
@@ -77,6 +79,14 @@ export default function PlayersPage() {
             ))}
           </SelectContent>
         </Select>
+
+        <input
+          type="text"
+          placeholder="Search players..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="px-3 py-2 border rounded-md w-64"
+        />
       </div>
 
       <Tabs defaultValue="blitz" className="w-full">
