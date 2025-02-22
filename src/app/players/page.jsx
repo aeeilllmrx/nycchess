@@ -110,12 +110,12 @@ export default function PlayersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orderBy(filteredPlayers, [(player) => Number(player.Rating_2 || 0)], ['desc']).map((player) => (
+              {orderBy(filteredPlayers, [(player) => Number(player.Rating_1 || 0)], ['desc']).map((player) => (
                 <TableRow key={player.ID}>
                   <TableCell>{player.ID.slice(1)}</TableCell>
                   <TableCell>{player.Name}</TableCell>
                   <TableCell>{player.Team}</TableCell>
-                  <TableCell className="text-right">{player.Rating_2}</TableCell>
+                  <TableCell className="text-right">{player.Rating_1}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
