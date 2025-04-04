@@ -1,22 +1,34 @@
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 
-import { Inter } from "next/font/google";
+import {
+  // Instrument_Serif,
+  Montserrat,
+} from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FirebaseProvider from "@/components/firebase/FirebaseProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const sans = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+// const serif = Instrument_Serif({
+//   subsets: ["latin"],
+//   weight: ["400"],
+// });
 
 export const metadata = {
   title: "NYC Chess Club",
-  description: "Information hub for NYC chess clubs and tournaments",
+  description:
+    "Information hub for NYC chess clubs and tournaments",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={sans.className}>
         <FirebaseProvider>
           <div className="min-h-screen flex flex-col">
             <Header />
