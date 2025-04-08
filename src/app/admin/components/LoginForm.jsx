@@ -71,9 +71,9 @@ export default function LoginForm() {
             disabled={isLoading}
             className={`w-full py-2 px-4 text-white rounded-md transition-colors
               ${isLoading 
-                ? 'bg-blue-400 cursor-not-allowed' 
-                : 'bg-blue-600 hover:bg-blue-700'
-              }`}
+      ? 'bg-blue-400 cursor-not-allowed' 
+      : 'bg-blue-600 hover:bg-blue-700'
+    }`}
           >
             {isLoading ? 'Signing in...' : 'Sign In'}
           </button>

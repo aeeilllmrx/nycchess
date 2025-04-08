@@ -57,8 +57,8 @@ export default function ClubsPage() {
             <SelectValue placeholder="Select borough" />
           </SelectTrigger>
           <SelectContent className="bg-white text-gray-500">
-            {boroughs.map(borough => (
-              <SelectItem key={borough} value={borough}>
+            {boroughs.map((borough, index) => (
+              <SelectItem key={index} value={borough}>
                 {borough}
               </SelectItem>
             ))}
@@ -67,8 +67,8 @@ export default function ClubsPage() {
       </div>
 
       <div className="grid gap-4">
-        {filteredClubs.map(club => (
-          <Card key={club.id}>
+        {filteredClubs.map((club, index) => (
+          <Card key={club.id || index}>
             <CardContent className="p-4">
               <h2 className="text-xl font-semibold mb-2">{club.name}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-600 dark:text-gray-300">
@@ -87,4 +87,4 @@ export default function ClubsPage() {
       </div>
     </div>
   );
-};
+}

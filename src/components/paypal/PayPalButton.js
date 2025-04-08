@@ -31,7 +31,7 @@ export function PayPalButton({ tournamentId, amount, name }) {
         },
 
         onApprove: (data, actions) => {
-          return actions.order.capture().then(function(details) {
+          return actions.order.capture().then(function() {
             setStatus('success');
             setErrorMessage('');
           });

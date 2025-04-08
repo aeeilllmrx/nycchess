@@ -13,9 +13,9 @@ export const PastTournaments = ({ clubsData }) => {
             onClick={() => setSelectedClub(club.name)}
             className={`w-full text-left px-4 py-3 rounded-lg transition-colors
               ${selectedClub === club.name
-                ? 'bg-blue-50 dark:bg-blue-900'
-                : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-              }`}
+            ? 'bg-blue-50 dark:bg-blue-900'
+            : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+          }`}
           >
             {club.name}
           </button>
