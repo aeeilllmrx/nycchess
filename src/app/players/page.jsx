@@ -7,6 +7,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+
+const rankPlayers = (players, blitzRatingType, rapidRatingType) => {
+  // convert ratings to numbers and filter out players with invalid ratings, default to 0 if invalid
+  players.forEach(player => {
+    player[blitzRatingType] = Number(player[blitzRatingType]) || 0;
+    player[rapidRatingType] = Number(player[rapidRatingType]) || 0;
+  });
+
+  // sort and assign blitz and rapid ranks
+  const blitzSortedPlayers = orderBy(players, [blitzRatingType], ['desc']);
+  const rapidSortedPlayers = orderBy(players, [rapidRatingType], ['desc']);
+
+  blitzSortedPlayers.forEach((player, index) => {
+    player.RankBlitz = index + 1;
+  });
+
+  rapidSortedPlayers.forEach((player, index) => {
+    player.RankRapid = index + 1;
+  });
+
+  return players;
+};
 export default function PlayersPage() {
   const [players, setPlayers] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState('all');
@@ -14,13 +36,14 @@ export default function PlayersPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHfkpjzf6lxKgpKCUa-f7CfvjHTiko34qrLe2WKeOGn46CaxeLMWea8fVSyMYV3iNDV3RMjC2HyRlT/pub?gid=985029476&single=true&range=A:Z&output=tsv"
         const response = await fetch(SHEET_URL);
         const text = await response.text();
-        
+
         const result = Papa.parse(text, {
           header: true,
           skipEmptyLines: true,
@@ -28,8 +51,11 @@ export default function PlayersPage() {
         });
 
         const uniqueTeams = [...new Set(result.data.map(player => player.Team))].filter(Boolean);
+
+        // rank players for both rapid and blitz
+        const rankedData = rankPlayers(result.data, 'Rating_3', 'Rating_1');
         setTeams(uniqueTeams);
-        setPlayers(result.data);
+        setPlayers(rankedData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -40,9 +66,9 @@ export default function PlayersPage() {
     fetchData();
   }, []);
 
-  const filteredPlayers = players.filter(player => 
+  const filteredPlayers = players.filter(player =>
     (selectedTeam === 'all' || player.Team === selectedTeam) &&
-    player.Name.toLowerCase().includes(searchQuery.toLowerCase())
+        player.Name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (loading) {
@@ -70,7 +96,7 @@ export default function PlayersPage() {
       <div className="mb-6 flex items-center gap-4">
         <Select value={selectedTeam} onValueChange={setSelectedTeam}>
           <SelectTrigger className="w-48">
-            <SelectValue placeholder="Filter by team" />
+            <SelectValue placeholder="Filter by team"/>
           </SelectTrigger>
           <SelectContent className="bg-white text-gray-500">
             <SelectItem value="all">All Teams</SelectItem>
@@ -91,11 +117,13 @@ export default function PlayersPage() {
 
       <Tabs defaultValue="blitz" className="w-full">
         <TabsList className="bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
-          <TabsTrigger value="blitz" className="px-4 py-2 rounded-md hover:bg-white hover:shadow-sm dark:hover:bg-gray-700">
-            Blitz Ratings
+          <TabsTrigger value="blitz"
+            className="px-4 py-2 rounded-md hover:bg-white hover:shadow-sm dark:hover:bg-gray-700">
+                        Blitz Ratings
           </TabsTrigger>
-          <TabsTrigger value="rapid" className="px-4 py-2 rounded-md hover:bg-white hover:shadow-sm dark:hover:bg-gray-700">
-            Rapid Ratings
+          <TabsTrigger value="rapid"
+            className="px-4 py-2 rounded-md hover:bg-white hover:shadow-sm dark:hover:bg-gray-700">
+                        Rapid Ratings
           </TabsTrigger>
         </TabsList>
 
@@ -103,6 +131,7 @@ export default function PlayersPage() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Rank</TableHead>
                 <TableHead>ID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Team</TableHead>
@@ -110,14 +139,18 @@ export default function PlayersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orderBy(filteredPlayers, [(player) => Number(player.Rating_3 || 0)], ['desc']).map((player) => (
-                <TableRow key={player.ID}>
-                  <TableCell>{player.ID.slice(1)}</TableCell>
-                  <TableCell>{player.Name}</TableCell>
-                  <TableCell>{player.Team}</TableCell>
-                  <TableCell className="text-right">{player.Rating_3}</TableCell>
-                </TableRow>
-              ))}
+              {filteredPlayers
+                .filter(player => player.RankBlitz) // make sure only valid ranks are used
+                .sort((a, b) => a.RankBlitz - b.RankBlitz)
+                .map((player) => (
+                  <TableRow key={player.ID}>
+                    <TableCell>{player.RankBlitz}</TableCell>
+                    <TableCell>{player.ID.slice(1)}</TableCell>
+                    <TableCell>{player.Name}</TableCell>
+                    <TableCell>{player.Team}</TableCell>
+                    <TableCell className="text-right">{player.Rating_3}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TabsContent>
@@ -126,6 +159,7 @@ export default function PlayersPage() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Rank</TableHead>
                 <TableHead>ID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Team</TableHead>
@@ -133,14 +167,18 @@ export default function PlayersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orderBy(filteredPlayers, [(player) => Number(player.Rating_1 || 0)], ['desc']).map((player) => (
-                <TableRow key={player.ID}>
-                  <TableCell>{player.ID.slice(1)}</TableCell>
-                  <TableCell>{player.Name}</TableCell>
-                  <TableCell>{player.Team}</TableCell>
-                  <TableCell className="text-right">{player.Rating_1}</TableCell>
-                </TableRow>
-              ))}
+              {filteredPlayers
+                .filter(player => player.RankRapid) // make sure only valid ranks are used
+                .sort((a, b) => a.RankRapid - b.RankRapid)
+                .map((player) => (
+                  <TableRow key={player.ID}>
+                    <TableCell>{player.RankRapid}</TableCell>
+                    <TableCell>{player.ID.slice(1)}</TableCell>
+                    <TableCell>{player.Name}</TableCell>
+                    <TableCell>{player.Team}</TableCell>
+                    <TableCell className="text-right">{player.Rating_1}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TabsContent>
