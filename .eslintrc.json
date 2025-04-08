@@ -13,6 +13,13 @@
   },
   "extends": [
     "next/core-web-vitals",
-    "eslint:recommended"
-  ]
+    "eslint:recommended",
+    "prettier"
+  ],
+  "plugins": ["react", "import", "prettier"],
+  "rules": {
+    "object-curly-spacing": ["error", "always"],
+    "import/newline-after-import": ["error", { "count": 1 }],
+    "react/prop-types": "off"
+  }
 }
