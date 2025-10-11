@@ -1,6 +1,6 @@
 'use client';
 
-import '@/firebase.js'; 
+import '@/lib/firebase'; 
 
 export default function FirebaseProvider({ children }) {
   return children;

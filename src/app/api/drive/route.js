@@ -1,4 +1,4 @@
-import { getDriveData } from '../../../utils/googleDrive';
+import { getDriveData } from '@/lib/googleDrive';
 
 export async function GET() {
   try {

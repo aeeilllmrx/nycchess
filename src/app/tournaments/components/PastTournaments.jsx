@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TournamentList } from './tournamentList';
+import { TournamentList } from './TournamentList';
 
 export const PastTournaments = ({ clubsData }) => {
   const [selectedClub, setSelectedClub] = useState(null);
@@ -32,3 +32,4 @@ export const PastTournaments = ({ clubsData }) => {
     </div>
   );
 };
+

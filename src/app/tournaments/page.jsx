@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { fetchUpcomingTournaments } from '@/lib/sheets';
 import { PayPalButton } from '@/components/paypal/PayPalButton';
-import { PastTournaments } from './pastTournaments';
+import { PastTournaments } from './components/PastTournaments';
 
 export default function TournamentsPage() {
   const [activeTab, setActiveTab] = useState('upcoming');

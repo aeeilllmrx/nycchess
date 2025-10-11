@@ -2,7 +2,6 @@
 
 import { orderBy } from 'lodash';
 import React, { useState, useEffect } from 'react';
-import Papa from 'papaparse';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -40,22 +39,17 @@ export default function PlayersPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHfkpjzf6lxKgpKCUa-f7CfvjHTiko34qrLe2WKeOGn46CaxeLMWea8fVSyMYV3iNDV3RMjC2HyRlT/pub?gid=985029476&single=true&range=A:Z&output=tsv"
-        const response = await fetch(SHEET_URL);
-        const text = await response.text();
+        const response = await fetch('/api/players');
+        const data = await response.json();
 
-        const result = Papa.parse(text, {
-          header: true,
-          skipEmptyLines: true,
-          delimiter: '\t',
-        });
-
-        const uniqueTeams = [...new Set(result.data.map(player => player.Team))].filter(Boolean);
-
-        // rank players for both rapid and blitz
-        const rankedData = rankPlayers(result.data, 'Rating_3', 'Rating_1');
-        setTeams(uniqueTeams);
-        setPlayers(rankedData);
+        if (response.ok) {
+          const uniqueTeams = [...new Set(data.map(player => player.Team))].filter(Boolean);
+          const rankedData = rankPlayers(data, 'Rating_3', 'Rating_1');
+          setTeams(uniqueTeams);
+          setPlayers(rankedData);
+        } else {
+          console.error('Error fetching data:', data.error);
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
