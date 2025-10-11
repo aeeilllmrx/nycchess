@@ -140,7 +140,7 @@ export default function FileUploadForm() {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <h2 className="text-3xl font-bold mb-6">Process Tournament</h2>
+      <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-dark-text">Process Tournament</h2>
 
       {/* Progress indicator */}
       <div className="mb-8 flex items-center justify-between">
@@ -151,14 +151,14 @@ export default function FileUploadForm() {
             } text-white font-bold`}>
               {step > idx + 1 ? '✓' : idx + 1}
             </div>
-            <span className="ml-2 text-sm font-medium">{label}</span>
+            <span className="ml-2 text-sm font-medium text-gray-700 dark:text-dark-text">{label}</span>
             {idx < 3 && <div className="w-16 h-1 bg-gray-300 mx-4" />}
           </div>
         ))}
       </div>
 
       {error && (
-        <div className="p-4 mb-6 text-red-700 bg-red-100 border border-red-300 rounded">
+        <div className="p-4 mb-6 text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-800 rounded">
           <pre className="whitespace-pre-wrap font-mono text-sm">{error}</pre>
         </div>
       )}
@@ -167,40 +167,40 @@ export default function FileUploadForm() {
       {step === 1 && (
         <form onSubmit={handleValidate} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
               Tournament Name
             </label>
             <input
               type="text"
               value={tournamentName}
               onChange={(e) => setTournamentName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-text rounded-md"
               placeholder="e.g., Weekly Blitz #45"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
               Tournament Date
             </label>
             <input
               type="date"
               value={tournamentDate}
               onChange={(e) => setTournamentDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-text rounded-md"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
               Tournament Type
             </label>
             <select
               value={tournamentType}
               onChange={(e) => setTournamentType(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-text rounded-md"
             >
               <option value="rapid">Rapid</option>
               <option value="blitz">Blitz</option>
@@ -208,7 +208,7 @@ export default function FileUploadForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
               Tournament File (TSV format)
             </label>
             <input
@@ -218,7 +218,7 @@ export default function FileUploadForm() {
               className="w-full"
               required
             />
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-gray-500 dark:text-dark-muted">
               File should be tab-delimited with columns: ID, Name, Rating, Rnd1, Rnd2, etc.
             </p>
           </div>
@@ -300,7 +300,7 @@ export default function FileUploadForm() {
           <h3 className="text-2xl font-bold text-green-600 mb-2">
             Ratings Updated Successfully!
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 dark:text-dark-muted mb-6">
             {ratingChanges?.changes.length} player ratings have been updated.
           </p>
           <button

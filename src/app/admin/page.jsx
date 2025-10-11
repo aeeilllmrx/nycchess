@@ -20,7 +20,7 @@ export default function AdminPage() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center min-h-[50vh] text-gray-900 dark:text-dark-text">Loading...</div>;
   }
 
   return user ? <FileUploadForm /> : <LoginForm />;
