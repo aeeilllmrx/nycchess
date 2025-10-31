@@ -144,19 +144,16 @@ export async function POST(request) {
       text = updatedLines.join('\n');
     }
 
-    // Now get all player IDs (including newly created ones)
+    // Re-parse the updated text to get all player IDs (including newly assigned ones)
+    const updatedLines = text.trim().split('\n');
     const finalPlayerIds = [];
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i].trim();
+    
+    for (let i = 1; i < updatedLines.length; i++) {
+      const line = updatedLines[i].trim();
       if (!line) continue;
       
       const values = line.split('\t');
-      let id = values[idIndex]?.trim();
-      
-      // Use replacement ID if this was an AUTO entry
-      if (idReplacements.has(i)) {
-        id = idReplacements.get(i);
-      }
+      const id = values[idIndex]?.trim();
       
       if (id) {
         finalPlayerIds.push(id);
