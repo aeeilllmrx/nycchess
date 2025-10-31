@@ -219,7 +219,9 @@ export default function FileUploadForm() {
               required
             />
             <p className="mt-2 text-sm text-gray-500 dark:text-dark-muted">
-              File should be tab-delimited with columns: ID, Name, Rating, Rnd1, Rnd2, etc.
+              File should be tab-delimited with columns: ID, Name, Rnd1, Rnd2, etc.
+              <br />
+              <span className="text-xs">Use &quot;AUTO&quot; as the ID for new players to auto-assign IDs.</span>
             </p>
           </div>
 

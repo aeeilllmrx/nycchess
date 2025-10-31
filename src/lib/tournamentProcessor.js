@@ -139,8 +139,10 @@ export function parseTournamentResults(tsvText) {
       row[header] = values[idx] || '';
     });
 
-    // Convert Rating to number
-    row.Rating = parseInt(row.Rating, 10);
+    // Convert Rating to number if present (optional field)
+    if (row.Rating) {
+      row.Rating = parseInt(row.Rating, 10);
+    }
     row.Number = i; // Player number for pairing lookup
     
     results.push(row);
@@ -164,12 +166,6 @@ export function processTournament(playerStats, tsvText) {
     playerLookup[player.Number] = player.ID;
   }
 
-  // Track initial ratings
-  const initialRatings = {};
-  for (const player of playerResults) {
-    initialRatings[player.ID] = player.Rating;
-  }
-
   // Track rating changes per round
   const playerRoundDiffs = {};
   for (const player of playerResults) {
@@ -188,7 +184,6 @@ export function processTournament(playerStats, tsvText) {
   return {
     updatedStats: playerStats,
     roundDiffs: playerRoundDiffs,
-    initialRatings,
     roundColumns
   };
 }
@@ -213,7 +208,7 @@ export function validateTournamentFile(tsvText) {
     const headers = lines[0].split('\t').map(h => h.trim()).filter(Boolean);
 
     // Check required columns
-    const requiredColumns = ['ID', 'Name', 'Rating'];
+    const requiredColumns = ['ID', 'Name'];
     const missingColumns = requiredColumns.filter(col => !headers.includes(col));
     if (missingColumns.length > 0) {
       errors.push(`Missing required columns: ${missingColumns.join(', ')}`);
@@ -252,9 +247,6 @@ export function validateTournamentFile(tsvText) {
       }
       if (!player.Name) {
         warnings.push(`Player ${player.ID} missing name`);
-      }
-      if (!player.Rating || isNaN(parseInt(player.Rating, 10))) {
-        errors.push(`Player ${player.ID} has invalid rating`);
       }
     }
 

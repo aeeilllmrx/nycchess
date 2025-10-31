@@ -41,6 +41,31 @@ export default function RatingPreview({ changes, tournamentName, tournamentType,
         </div>
       </div>
 
+      {/* New Players Created */}
+      {changes.newPlayersCreated && changes.newPlayersCreated.length > 0 && (
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+          <h4 className="font-semibold text-green-800 dark:text-green-300 mb-3 flex items-center">
+            <span className="text-xl mr-2">🆕</span>
+            New Players Created ({changes.newPlayersCreated.length})
+          </h4>
+          <div className="space-y-2">
+            {changes.newPlayersCreated.map((player) => (
+              <div key={player.assignedId} className="flex items-center justify-between text-sm bg-white dark:bg-gray-800 rounded p-3">
+                <span className="font-medium text-gray-900 dark:text-gray-100">{player.name}</span>
+                <div className="flex gap-3 items-center text-gray-600 dark:text-gray-400">
+                  <span className="font-mono bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 px-2 py-1 rounded font-semibold">
+                    {player.assignedId}
+                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    (Also created {player.pairId})
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Search and Sort */}
       <div className="flex items-center gap-4">
         <input
@@ -77,7 +102,14 @@ export default function RatingPreview({ changes, tournamentName, tournamentType,
               {filteredChanges.map((change) => (
                 <tr key={change.playerId} className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-sm">
-                    <div className="font-medium text-gray-900">{change.playerName}</div>
+                    <div className="font-medium text-gray-900 flex items-center gap-2">
+                      {change.playerName}
+                      {change.isNewPlayer && (
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded font-semibold">
+                          NEW
+                        </span>
+                      )}
+                    </div>
                     <div className="text-gray-500 text-xs">{change.playerId}</div>
                   </td>
                   <td className="px-4 py-3 text-right text-sm text-gray-700">{change.oldRating}</td>
