@@ -25,7 +25,7 @@ export async function POST(request) {
     let text = await file.text();
 
     // Parse to get player IDs and names from tournament
-    const lines = text.trim().split('\n');
+    let lines = text.trim().split('\n');
     const headers = lines[0].split('\t').map(h => h.trim()).filter(Boolean);
     const idIndex = headers.indexOf('ID');
     const nameIndex = headers.indexOf('Name');
@@ -36,24 +36,50 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
+    // Helper function to normalize player IDs (strip R/B prefix)
+    const normalizeId = (id) => {
+      if (!id || id.toUpperCase() === 'AUTO') return id;
+      return id.replace(/^[RB]/i, '');
+    };
+
     // First pass: collect player IDs and detect AUTO entries
     const playerData = [];
     const autoPlayers = [];
+    const idNormalizations = new Map(); // Maps line index to normalized ID
     
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) continue;
       
       const values = line.split('\t');
-      const id = values[idIndex]?.trim();
+      const rawId = values[idIndex]?.trim();
       const name = values[nameIndex]?.trim();
       
-      if (id && name) {
-        if (id.toUpperCase() === 'AUTO') {
+      if (rawId && name) {
+        if (rawId.toUpperCase() === 'AUTO') {
           autoPlayers.push({ lineIndex: i, name });
+        } else {
+          const normalizedId = normalizeId(rawId);
+          if (normalizedId !== rawId) {
+            idNormalizations.set(i, normalizedId);
+          }
+          playerData.push({ id: normalizedId, name, lineIndex: i });
         }
-        playerData.push({ id, name, lineIndex: i });
       }
+    }
+
+    // Normalize IDs in the text (strip R/B prefixes)
+    if (idNormalizations.size > 0) {
+      const normalizedLines = lines.map((line, index) => {
+        if (idNormalizations.has(index)) {
+          const values = line.split('\t');
+          values[idIndex] = idNormalizations.get(index);
+          return values.join('\t');
+        }
+        return line;
+      });
+      text = normalizedLines.join('\n');
+      lines = text.trim().split('\n');
     }
 
     // Handle AUTO player creation
@@ -61,73 +87,52 @@ export async function POST(request) {
     const idReplacements = new Map(); // Maps line index to new ID
     
     if (autoPlayers.length > 0) {
-      // Find the highest existing ID numbers for R and B
+      // Find the highest existing numeric ID
       const { rows: allPlayers } = await sql`
-        SELECT id FROM players WHERE id ~ '^[RB][0-9]+$'
+        SELECT id FROM players WHERE id ~ '^[0-9]+$'
       `;
       
-      let maxRapidId = 0;
-      let maxBlitzId = 0;
-      
+      let maxId = 0;
       for (const player of allPlayers) {
-        const match = player.id.match(/^([RB])(\d+)$/);
-        if (match) {
-          const [, prefix, numStr] = match;
-          const num = parseInt(numStr, 10);
-          if (prefix === 'R') {
-            maxRapidId = Math.max(maxRapidId, num);
-          } else if (prefix === 'B') {
-            maxBlitzId = Math.max(maxBlitzId, num);
-          }
+        const num = parseInt(player.id, 10);
+        if (!isNaN(num)) {
+          maxId = Math.max(maxId, num);
         }
       }
 
-      // Assign new IDs and create player records
-      const prefix = tournamentType === 'rapid' ? 'R' : 'B';
-      const pairPrefix = tournamentType === 'rapid' ? 'B' : 'R';
-      let nextRapidId = maxRapidId + 1;
-      let nextBlitzId = maxBlitzId + 1;
+      let nextId = maxId + 1;
 
       for (const autoPlayer of autoPlayers) {
-        const nextId = prefix === 'R' ? nextRapidId++ : nextBlitzId++;
-        const pairId = prefix === 'R' ? nextBlitzId++ : nextRapidId++;
+        const assignedId = String(nextId);
+        nextId++;
         
-        const assignedId = `${prefix}${nextId}`;
-        const assignedPairId = `${pairPrefix}${pairId}`;
+        // Insert player
+        await sql`
+          INSERT INTO players (id, name)
+          VALUES (${assignedId}, ${autoPlayer.name})
+          ON CONFLICT (id) DO NOTHING
+        `;
         
-        // Create both R and B records for this player
-        const idsToCreate = [assignedId, assignedPairId];
-        
-        for (const playerId of idsToCreate) {
-          // Insert player
-          await sql`
-            INSERT INTO players (id, name)
-            VALUES (${playerId}, ${autoPlayer.name})
-            ON CONFLICT (id) DO NOTHING
-          `;
-          
-          // Insert ratings with default Glicko2 values
-          await sql`
-            INSERT INTO ratings (
-              player_id, 
-              rapid_rating, rapid_rd, rapid_sigma,
-              blitz_rating, blitz_rd, blitz_sigma
-            )
-            VALUES (
-              ${playerId},
-              1500, 350, 0.06,
-              1500, 350, 0.06
-            )
-            ON CONFLICT (player_id) DO NOTHING
-          `;
-        }
+        // Insert ratings with default Glicko2 values
+        await sql`
+          INSERT INTO ratings (
+            player_id, 
+            rapid_rating, rapid_rd, rapid_sigma,
+            blitz_rating, blitz_rd, blitz_sigma
+          )
+          VALUES (
+            ${assignedId},
+            1500, 350, 0.06,
+            1500, 350, 0.06
+          )
+          ON CONFLICT (player_id) DO NOTHING
+        `;
         
         // Store the replacement and track for response
         idReplacements.set(autoPlayer.lineIndex, assignedId);
         newPlayersCreated.push({
           name: autoPlayer.name,
-          assignedId: assignedId,
-          pairId: assignedPairId
+          assignedId: assignedId
         });
       }
 

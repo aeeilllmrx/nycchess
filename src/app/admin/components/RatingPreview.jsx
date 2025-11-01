@@ -52,14 +52,9 @@ export default function RatingPreview({ changes, tournamentName, tournamentType,
             {changes.newPlayersCreated.map((player) => (
               <div key={player.assignedId} className="flex items-center justify-between text-sm bg-white dark:bg-gray-800 rounded p-3">
                 <span className="font-medium text-gray-900 dark:text-gray-100">{player.name}</span>
-                <div className="flex gap-3 items-center text-gray-600 dark:text-gray-400">
-                  <span className="font-mono bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 px-2 py-1 rounded font-semibold">
-                    {player.assignedId}
-                  </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    (Also created {player.pairId})
-                  </span>
-                </div>
+                <span className="font-mono bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 px-2 py-1 rounded font-semibold">
+                  {player.assignedId}
+                </span>
               </div>
             ))}
           </div>
