@@ -106,27 +106,8 @@ export async function POST(request) {
         const assignedId = String(nextId);
         nextId++;
         
-        // Insert player
-        await sql`
-          INSERT INTO players (id, name)
-          VALUES (${assignedId}, ${autoPlayer.name})
-          ON CONFLICT (id) DO NOTHING
-        `;
-        
-        // Insert ratings with default Glicko2 values
-        await sql`
-          INSERT INTO ratings (
-            player_id, 
-            rapid_rating, rapid_rd, rapid_sigma,
-            blitz_rating, blitz_rd, blitz_sigma
-          )
-          VALUES (
-            ${assignedId},
-            1500, 350, 0.06,
-            1500, 350, 0.06
-          )
-          ON CONFLICT (player_id) DO NOTHING
-        `;
+        // Don't create in database yet - just assign ID for preview
+        // They'll be created when ratings are applied
         
         // Store the replacement and track for response
         idReplacements.set(autoPlayer.lineIndex, assignedId);
@@ -191,14 +172,15 @@ export async function POST(request) {
       playerStats[player.id] = [player.name, ratingObj];
     }
 
-    // Check for missing players (should not happen now with auto-creation)
+    // Add AUTO players with default ratings for preview calculation
     const existingIds = new Set(playerRatings.map(p => p.id));
-    const missingPlayers = finalPlayerIds.filter(id => !existingIds.has(id));
-
-    if (missingPlayers.length > 0) {
-      return NextResponse.json({
-        error: `Players not found in database: ${missingPlayers.join(', ')}`
-      }, { status: 400 });
+    for (const newPlayer of newPlayersCreated) {
+      if (!existingIds.has(newPlayer.assignedId)) {
+        playerStats[newPlayer.assignedId] = [
+          newPlayer.name,
+          new Rating(1500, 350, 0.06)
+        ];
+      }
     }
 
     // Process tournament with updated text
@@ -210,9 +192,11 @@ export async function POST(request) {
     // Format results for preview
     const changes = [];
     for (const [playerId, [playerName, newRating]] of Object.entries(result.updatedStats)) {
-      const oldRating = tournamentType === 'rapid'
-        ? playerRatings.find(p => p.id === playerId).rapid_rating
-        : playerRatings.find(p => p.id === playerId).blitz_rating;
+      const isNew = newPlayerIds.has(playerId);
+      const existingPlayer = playerRatings.find(p => p.id === playerId);
+      const oldRating = isNew ? 1500 : (tournamentType === 'rapid'
+        ? existingPlayer.rapid_rating
+        : existingPlayer.blitz_rating);
 
       const roundChanges = {};
       for (const [round, diff] of Object.entries(result.roundDiffs[playerId])) {
@@ -228,7 +212,7 @@ export async function POST(request) {
         newSigma: newRating.sigma,
         ratingChange: Math.round(newRating.mu - oldRating),
         roundChanges,
-        isNewPlayer: newPlayerIds.has(playerId)
+        isNewPlayer: isNew
       });
     }
 

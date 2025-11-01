@@ -58,6 +58,34 @@ export async function POST(request) {
 
       const tournamentId = tournamentRows[0].id;
 
+      // Create any new players (from AUTO entries) before updating ratings
+      const { rows: existingPlayers } = await client.query(`
+        SELECT id FROM players WHERE id = ANY($1::text[])
+      `, [changes.map(c => c.playerId)]);
+      
+      const existingPlayerIds = new Set(existingPlayers.map(p => p.id));
+      const newPlayers = changes.filter(c => c.isNewPlayer && !existingPlayerIds.has(c.playerId));
+      
+      for (const newPlayer of newPlayers) {
+        // Create player record
+        await client.query(`
+          INSERT INTO players (id, name)
+          VALUES ($1, $2)
+          ON CONFLICT (id) DO NOTHING
+        `, [newPlayer.playerId, newPlayer.playerName]);
+        
+        // Create ratings record with default values
+        await client.query(`
+          INSERT INTO ratings (
+            player_id, 
+            rapid_rating, rapid_rd, rapid_sigma,
+            blitz_rating, blitz_rd, blitz_sigma
+          )
+          VALUES ($1, 1500, 350, 0.06, 1500, 350, 0.06)
+          ON CONFLICT (player_id) DO NOTHING
+        `, [newPlayer.playerId]);
+      }
+
       // Update ratings and record history
       for (const change of changes) {
         const { playerId, newRating, newRd, newSigma, oldRating } = change;
