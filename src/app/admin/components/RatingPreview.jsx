@@ -18,6 +18,68 @@ export default function RatingPreview({ changes, tournamentName, tournamentType,
       }
     });
 
+  const downloadCSV = () => {
+    // Get all round columns dynamically
+    const roundColumns = changes.changes.length > 0 && changes.changes[0].roundChanges
+      ? Object.keys(changes.changes[0].roundChanges).sort()
+      : [];
+
+    // Create CSV header
+    const headers = [
+      'Player ID',
+      'Player Name',
+      'Old Rating',
+      'New Rating',
+      'Rating Change',
+      'New RD',
+      'New Sigma',
+      'Is New Player',
+      ...roundColumns.map(round => `${round} Change`)
+    ];
+
+    // Create CSV rows
+    const rows = changes.changes.map(change => {
+      const roundChanges = roundColumns.map(round => 
+        change.roundChanges[round] !== undefined ? change.roundChanges[round] : ''
+      );
+      
+      return [
+        change.playerId,
+        `"${change.playerName}"`, // Wrap in quotes to handle commas in names
+        change.oldRating,
+        change.newRating,
+        change.ratingChange > 0 ? `+${change.ratingChange}` : change.ratingChange,
+        change.newRd,
+        change.newSigma.toFixed(4),
+        change.isNewPlayer ? 'Yes' : 'No',
+        ...roundChanges
+      ];
+    });
+
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    // Create filename with tournament name and date
+    const sanitizedTournamentName = tournamentName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const dateStr = new Date().toISOString().split('T')[0];
+    const filename = `${sanitizedTournamentName}_rating_changes_${dateStr}.csv`;
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-6">
       {/* Summary */}
@@ -154,6 +216,20 @@ export default function RatingPreview({ changes, tournamentName, tournamentType,
               ))}
           </div>
         </div>
+      </div>
+
+      {/* Download CSV Button */}
+      <div className="flex justify-center pt-4">
+        <button
+          onClick={downloadCSV}
+          disabled={loading}
+          className="inline-flex items-center gap-2 px-6 py-2.5 border border-blue-600 text-blue-600 rounded-md font-semibold hover:bg-blue-50 disabled:opacity-50 transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Download Rating Changes (CSV)
+        </button>
       </div>
 
       {/* Action Buttons */}
