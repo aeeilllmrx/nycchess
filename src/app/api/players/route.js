@@ -16,7 +16,7 @@ export async function GET() {
         r.blitz_sigma as "RV_3"
       FROM players p
       JOIN ratings r ON p.id = r.player_id
-      ORDER BY r.rapid_rating DESC
+      ORDER BY p.id
     `;
     return NextResponse.json(rows);
   } catch (error) {

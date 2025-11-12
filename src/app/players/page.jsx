@@ -4,7 +4,6 @@ import { orderBy } from 'lodash';
 import React, { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
 const rankPlayers = (players, blitzRatingType, rapidRatingType) => {
@@ -34,6 +33,7 @@ export default function PlayersPage() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('id'); // 'id', 'blitz', or 'rapid'
 
 
   useEffect(() => {
@@ -64,6 +64,21 @@ export default function PlayersPage() {
     (selectedTeam === 'all' || player.Team === selectedTeam) &&
         player.Name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Sort players based on selected sort option
+  const sortedPlayers = [...filteredPlayers].sort((a, b) => {
+    if (sortBy === 'id') {
+      // Compare IDs numerically
+      const numA = parseInt(a.ID) || 0;
+      const numB = parseInt(b.ID) || 0;
+      return numA - numB;
+    } else if (sortBy === 'blitz') {
+      return b.Rating_3 - a.Rating_3; // descending
+    } else if (sortBy === 'rapid') {
+      return b.Rating_1 - a.Rating_1; // descending
+    }
+    return 0;
+  });
 
   if (loading) {
     return (
@@ -107,76 +122,41 @@ export default function PlayersPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="px-3 py-2 border rounded-md w-64"
         />
+
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className="w-56">
+            <SelectValue placeholder="Sort by"/>
+          </SelectTrigger>
+          <SelectContent className="bg-white text-gray-500">
+            <SelectItem value="id">Sort by ID</SelectItem>
+            <SelectItem value="blitz">Sort by Blitz (Highest)</SelectItem>
+            <SelectItem value="rapid">Sort by Rapid (Highest)</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <Tabs defaultValue="blitz" className="w-full">
-        <TabsList className="bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
-          <TabsTrigger value="blitz"
-            className="px-4 py-2 rounded-md hover:bg-white hover:shadow-sm dark:hover:bg-gray-700">
-                        Blitz Ratings
-          </TabsTrigger>
-          <TabsTrigger value="rapid"
-            className="px-4 py-2 rounded-md hover:bg-white hover:shadow-sm dark:hover:bg-gray-700">
-                        Rapid Ratings
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="blitz">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Rank</TableHead>
-                <TableHead>ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Team</TableHead>
-                <TableHead className="text-right">Rating</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredPlayers
-                .filter(player => player.RankBlitz) // make sure only valid ranks are used
-                .sort((a, b) => a.RankBlitz - b.RankBlitz)
-                .map((player) => (
-                  <TableRow key={player.ID}>
-                    <TableCell>{player.RankBlitz}</TableCell>
-                    <TableCell>{player.ID.slice(1)}</TableCell>
-                    <TableCell>{player.Name}</TableCell>
-                    <TableCell>{player.Team}</TableCell>
-                    <TableCell className="text-right">{player.Rating_3}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TabsContent>
-
-        <TabsContent value="rapid">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Rank</TableHead>
-                <TableHead>ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Team</TableHead>
-                <TableHead className="text-right">Rating</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredPlayers
-                .filter(player => player.RankRapid) // make sure only valid ranks are used
-                .sort((a, b) => a.RankRapid - b.RankRapid)
-                .map((player) => (
-                  <TableRow key={player.ID}>
-                    <TableCell>{player.RankRapid}</TableCell>
-                    <TableCell>{player.ID.slice(1)}</TableCell>
-                    <TableCell>{player.Name}</TableCell>
-                    <TableCell>{player.Team}</TableCell>
-                    <TableCell className="text-right">{player.Rating_1}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TabsContent>
-      </Tabs>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>ID</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Team</TableHead>
+            <TableHead className="text-right">Blitz Rating</TableHead>
+            <TableHead className="text-right">Rapid Rating</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedPlayers.map((player) => (
+            <TableRow key={player.ID}>
+              <TableCell>{player.ID}</TableCell>
+              <TableCell>{player.Name}</TableCell>
+              <TableCell>{player.Team}</TableCell>
+              <TableCell className="text-right">{Math.round(player.Rating_3)}</TableCell>
+              <TableCell className="text-right">{Math.round(player.Rating_1)}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       <div className="mt-6 bg-blue-50 p-4 rounded-lg">
         <h2 className="text-lg font-semibold text-blue-800 mb-2">About Rankings</h2>
