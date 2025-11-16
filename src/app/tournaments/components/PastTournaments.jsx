@@ -3,7 +3,7 @@ import { TournamentList } from './TournamentList';
 
 export const PastTournaments = ({ clubsData }) => {
   const [selectedClub, setSelectedClub] = useState(null);
-  console.log("clubs data: ", clubsData)
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="space-y-4">
