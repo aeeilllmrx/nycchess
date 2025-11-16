@@ -5,6 +5,10 @@ export async function GET() {
     const data = await getDriveData();
     return Response.json(data);
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('Drive API error:', error.message);
+    return Response.json({ 
+      error: error.message
+    }, { status: 500 });
   }
 }
+

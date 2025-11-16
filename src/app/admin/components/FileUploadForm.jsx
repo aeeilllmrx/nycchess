@@ -9,6 +9,7 @@ export default function FileUploadForm() {
   const [tournamentType, setTournamentType] = useState('rapid');
   const [tournamentName, setTournamentName] = useState('');
   const [tournamentDate, setTournamentDate] = useState('');
+  const [tournamentClub, setTournamentClub] = useState('');
   const [step, setStep] = useState(1); // 1: upload, 2: validate, 3: preview, 4: success
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,8 +24,8 @@ export default function FileUploadForm() {
       return;
     }
 
-    if (!tournamentName || !tournamentDate) {
-      setError('Please provide tournament name and date');
+    if (!tournamentName || !tournamentDate || !tournamentClub) {
+      setError('Please provide tournament name, date, and club');
       return;
     }
 
@@ -111,6 +112,7 @@ export default function FileUploadForm() {
           tournamentName,
           tournamentDate,
           tournamentType,
+          tournamentClub,
           changes: ratingChanges.changes
         })
       });
@@ -132,6 +134,7 @@ export default function FileUploadForm() {
   const handleReset = () => {
     setFile(null);
     setTournamentName('');
+    setTournamentClub('');
     setStep(1);
     setValidation(null);
     setRatingChanges(null);
@@ -195,6 +198,30 @@ export default function FileUploadForm() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
+              Chess Club
+            </label>
+            <select
+              value={tournamentClub}
+              onChange={(e) => setTournamentClub(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-bg text-gray-900 dark:text-dark-text rounded-md"
+              required
+            >
+              <option value="">Select a club</option>
+              <option value="Bushwick Chess">Bushwick Chess</option>
+              <option value="Prospect Park Chess">Prospect Park Chess</option>
+              <option value="Williamsburg Chess">Williamsburg Chess</option>
+              <option value="North BK Chess">North BK Chess</option>
+              <option value="Astoria Chess">Astoria Chess</option>
+              <option value="Queers Gambit">Queers Gambit</option>
+              <option value="Club Chess">Club Chess</option>
+              <option value="Pawn Chess Club">Pawn Chess Club</option>
+              <option value="Park Slope Chess">Park Slope Chess</option>
+              <option value="Ocean Hill Chess">Ocean Hill Chess</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-dark-text mb-2">
               Tournament Type
             </label>
             <select
@@ -227,9 +254,9 @@ export default function FileUploadForm() {
 
           <button
             type="submit"
-            disabled={loading || !file || !tournamentName || !tournamentDate}
+            disabled={loading || !file || !tournamentName || !tournamentDate || !tournamentClub}
             className={`w-full py-3 px-4 rounded-md font-semibold ${
-              loading || !file || !tournamentName || !tournamentDate
+              loading || !file || !tournamentName || !tournamentDate || !tournamentClub
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700'
             } text-white`}

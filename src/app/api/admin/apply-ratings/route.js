@@ -35,9 +35,9 @@ export async function POST(request) {
 
     // Parse request body
     const body = await request.json();
-    const { tournamentName, tournamentDate, tournamentType, changes } = body;
+    const { tournamentName, tournamentDate, tournamentType, tournamentClub, changes } = body;
 
-    if (!tournamentName || !tournamentDate || !tournamentType || !changes) {
+    if (!tournamentName || !tournamentDate || !tournamentType || !tournamentClub || !changes) {
       return NextResponse.json({
         error: 'Missing required fields'
       }, { status: 400 });
@@ -51,10 +51,10 @@ export async function POST(request) {
 
       // Create tournament record
       const { rows: tournamentRows } = await client.query(`
-        INSERT INTO tournaments (name, tournament_date, tournament_type, processed_by)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO tournaments (name, tournament_date, tournament_type, club, processed_by)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING id
-      `, [tournamentName, tournamentDate, tournamentType, adminEmail]);
+      `, [tournamentName, tournamentDate, tournamentType, tournamentClub, adminEmail]);
 
       const tournamentId = tournamentRows[0].id;
 
